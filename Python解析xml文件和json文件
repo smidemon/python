@@ -1,0 +1,95 @@
+#coding=utf-8
+import os,sys
+import xml.dom.minidom
+import shutil
+# sys.path.insert(0, 'D:/file_download/gaodian/annotations')
+path = r"D:\file_download\gaodian\annotations"
+d_path = r"D:\file_download\gaodian\test"
+print(path)
+#返回指定文件夹下的所有文件
+files = os.listdir(path)
+print("共有%s个文件" % len(files))
+#统计无效文件的变量
+nc = 0
+try:
+    for file in files:
+        path_new = os.path.join(path,file)
+        path_new = path_new.replace("\\", "/")
+        # print(path_new)
+        dom = xml.dom.minidom.parse(path_new)
+        #得到文档元素对象
+        root = dom.documentElement
+        # pic = dom.getElementsByTagName('filename')
+        #获取标签为name的所有数据
+        ccs = dom.getElementsByTagName('name')
+        #循环判断数据中是否包含有bus或者truck
+        for cc in ccs:
+            if cc.firstChild.data == "truck" or cc.firstChild.data == "bus":
+                # file_name = (pic[0].firstChild.data).replace("jpg","xml")
+                # file_name = file_name.replace(" ","")
+                # print(path_new)
+                f_src = path_new
+                #目的文件夹是否存在，不存在就新建一个
+                if not os.path.exists(d_path):
+                    os.mkdir(d_path)
+                #目的地址格式化
+                f_dst = os.path.join(d_path, file)
+                f_dst = f_dst.replace("\\", "/")
+                print(f_dst)
+                #将无效文件移动到目的文件夹中
+                shutil.move(f_src, f_dst)
+                #统计无效文件的个数
+                nc += 1
+                break
+            else:
+                pass
+except Exception as e:
+    print(e)
+print("共有%s个文件无效" % nc)
+
+
+mxl.dom.minidom 模块被用来处理xml文件，所以要先引入。
+dom = xml.dom.minidom.parse(file) 用于打开一个xml文件，并将这个文件对象dom变量。
+root = dom.documentElement 用于得到dom对象的文档元素，并把获得的对象给root
+ccs = dom.getElementsByTagName('name')   获取标签之间的数据，列表接收
+cc.firstChild.data       firstChild 属性返回被选节点的第一个子节点，.data表示获取该节点人数据。
+每一个结点都有它的nodeName，nodeValue，nodeType属性。
+nodeName为结点名字。
+nodeValue是结点的值，只对文本结点有效。
+nodeType是结点的类型。
+参考文档：http://www.w3school.com.cn/xmldom/dom_nodetype.asp
+
+
+<login username="pytest" passwd='123456'>
+
+itemlist = root.getElementsByTagName('login')
+
+item = itemlist[0]
+
+un=item.getAttribute("username")
+getAttribute方法可以获得元素的属性所对应的值。
+
+**********************************************************************
+创建json文件
+config.json
+{
+     "fontFamily": "微软雅黑",
+     "fontSize": 12,
+     "BaseSettings":{
+         "font":1,
+         "size":2
+                    }
+}
+parseJson.py
+#!/python
+import json
+def loadFile(file_path):
+  with open(file_path,"r+",encoding="utf-8") as f:
+    info = json.load(f)
+    fontFamily = info['fontFamily']
+    size = info['BaseSettings']['size']
+    return fontFamily,size
+ob = loadFile("config.json")
+print ob
+
+json dumps把数据类型转换成字符串 dump把数据类型转换成字符串并存储在文件中,用于将dict类型的数据转成str，并写入到json文件中  loads把字符串转换成数据类型  load把文件打开从字符串转换成数据类型,用于从json文件中读取数据。
