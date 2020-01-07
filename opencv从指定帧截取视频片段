@@ -1,0 +1,25 @@
+# -*- coding: utf-8 -*-
+
+import cv2
+video_path = r'/opt/fqj/its-node-analysis/tmp/srcVideo/video_h264_4-2020-01-06-12:30:37.h264'
+
+videoCapture = cv2.VideoCapture(video_path)
+
+fps = 25  # 保存视频的帧率
+size = (1920, 1080)  # 保存视频的大小
+
+videoWriter = cv2.VideoWriter('north.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
+i = 0
+
+while True:
+    success, frame = videoCapture.read()
+    if success:
+        i += 1
+        print('i = ', i)
+        if (i >= 200 and i < 1700):
+            videoWriter.write(frame)
+    else:
+        print('end')
+        break
+
+#保存不同编码格式的视频，cv2.VideoWriter_fourcc选择不用的输入值
