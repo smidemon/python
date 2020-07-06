@@ -1,0 +1,5 @@
+1、pip install pylint出现：failed to create process.
+报这个错误的原因，是因为你改动了python的目录名称或位置。我的电脑之前是安装在F盘的，现在迁移到了E盘，所以需要修改路径，解决办法：
+找到修改python所在的目录，打开scripts目录，找到pip-script.py文件，并打开，在第一行添加如下代码，路径为你修改的python.exe的路径
+#!E:\old_drive_F\code\venv\Scripts\python.exe
+保存退出后重新执行pip
